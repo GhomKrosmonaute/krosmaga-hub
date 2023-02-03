@@ -8,6 +8,12 @@ const io = socketio(server);
 
 app.use(express.static("public"));
 
+app.get("/about", (req, res) => {
+  res.json({
+    author: "Ghom (Camille ABELLA)",
+  });
+});
+
 const sessions = {};
 
 io.on("connection", (socket) => {
