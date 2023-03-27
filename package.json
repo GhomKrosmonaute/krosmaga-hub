@@ -1,21 +1,24 @@
 {
-  "name": "ghess",
+  "name": "krosmaga-hub",
   "version": "1.0.0",
-  "description": "",
+  "description": "Le hub de Krosmaga !",
   "main": "server.js",
   "dependencies": {
-    "express": "^4.17.1",
-    "socket.io": "^2.3.0"
+    "express": "^4.18.2",
+    "socket.io": "^4.6.1"
   },
   "devDependencies": {},
   "scripts": {
     "start": "npx nodemon server.js",
-    "prettier": "npx prettier --write server.js public/script.js",
+    "format": "npx prettier --write server.js public/script.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CamilleAbella/Ghess.git"
+    "url": "git+https://github.com/GhomKrosmonaute/krosmaga-hub.git"
+  },
+  "prettier": {
+    "semi": false
   },
   "keywords": [],
   "author": "ghom",
