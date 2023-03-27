@@ -1,7 +1,20 @@
 #new-room-button {
-  /*    disabled*/
+  width: 150px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #797979;
+  background-color: #c0c0c0;
+  color: #565656;
 }
 
 #new-room-button.enabled {
-  /*    enabled*/
+  border: 2px solid #ffdd00;
+  background-color: #00507a;
+  color: #fdfadd;
+}
+
+#new-room-button.enabled:hover {
+  border: 2px solid #ffe23c;
+  background-color: #006da8;
+  color: #fff8f8;
 }
