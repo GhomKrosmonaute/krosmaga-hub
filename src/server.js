@@ -1,18 +1,10 @@
-const express = require("express")
-const http = require("http")
-const socketio = require("socket.io")
+import express from "express"
+import { Server } from "socket.io"
 
 const app = express()
-const server = http.createServer(app)
-const io = socketio(server)
+const io = new Server()
 
 app.use(express.static("public"))
-
-app.get("/about", (req, res) => {
-  res.json({
-    author: "Ghom (Camille ABELLA)",
-  })
-})
 
 const sessions = {}
 
@@ -90,6 +82,6 @@ io.on("connection", (socket) => {
   })
 })
 
-server.listen(3000, () => {
+app.listen(3000, () => {
   console.log("listening on localhost:3000")
 })
