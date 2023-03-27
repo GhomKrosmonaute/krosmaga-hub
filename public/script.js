@@ -111,7 +111,6 @@ ${Object.keys(sessions)
       e.classList.remove("eaten")
       document.getElementById("board").appendChild(e)
     })
-
     ;["b", "w"].forEach((team) => {
       let pionIndex = 0
 

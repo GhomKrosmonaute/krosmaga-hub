@@ -1,51 +1,16 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="shortcut icon" href="img/wK.png" type="image/x-icon">
+  <link rel="shortcut icon" href="img/icon.png" type="image/x-icon">
   <link rel="stylesheet" href="style.css">
-  <title>Ghess</title>
+  <title>Krosmaga Hub</title>
 </head>
 <body>
-  <div id="board"></div>
-  <div id="panel">
-    <h2>SESSION: <span id="session">?</span></h2>
-    <button id="reset">RESET</button>
-    <button id="rotate">ROTATE</button>
-    <div id="userCount">👁️ 0 viewers | ♟️ 0 players</div>
-    <div id="console">
-      <h3>Welcome to Ghess.</h3>
-    </div>
-    <div id="chat">
-      <input type="text" id="field" placeholder="Type a thing and press Enter.">
-      <div>
-        <select id="emoji">
-          <option value="👤" selected>👤</option>
-          <option value="👶">👶</option>
-          <option value="😙">😙</option>
-          <option value="👮">👮</option>
-          <option value="🦸">🦸</option>
-          <option value="🧙">🧙</option>
-          <option value="🕵️">🕵️</option>
-          <option value="🤓">🤓</option>
-          <option value="🐸">🐸</option>
-          <option value="👽">👽</option>
-          <option value="😇">😇</option>
-          <option value="🧝">🧝</option>
-          <option value="🧟">🧟</option>
-          <option value="🧛">🧛</option>
-          <option value="🧞">🧞</option>
-          <option value="🧜">🧜</option>
-          <option value="🧚">🧚</option>
-        </select>
-        <input type="color" id="color">
-      </div>
-    </div>
-  </div>
-  <div id="trash"></div>
+  <div id="app"></div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
 </body>
