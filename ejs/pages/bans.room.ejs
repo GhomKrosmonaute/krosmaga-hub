@@ -1,0 +1,14 @@
+<%- include('head', { title: 'Krosmaga Hub | Bans' }) %>
+<%- include('socket.io') %>
+
+<script>
+  var roomId = "<%= roomId %>"
+</script>
+
+<script defer src="/public/scripts/bans.room.js"></script>
+
+<p>
+  Attention ! <br>
+  Ne montrez ce lien qu'à votre adversaire ! <br>
+  Si vous et votre adversaire quittez cette page, cette session de bans sera supprimée.
+</p>

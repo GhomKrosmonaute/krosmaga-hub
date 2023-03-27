@@ -1,0 +1,11 @@
+* {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  z-index: 1;
+  min-height: 100vh;
+}
