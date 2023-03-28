@@ -1,5 +1,9 @@
-import io from "./app/socketIO.js"
-import uuid from "uuid"
+import { app, io } from "../app.js"
+import * as uuid from "uuid"
+
+app.get("/bans", (req, res) => {
+  res.render("pages/bans-no-room")
+})
 
 /**
  * @type {Object & {
@@ -9,6 +13,8 @@ import uuid from "uuid"
 const banRooms = {}
 
 io.on("connection", (socket) => {
+  console.log("new user connected", socket.id)
+
   socket.on("createRoom", () => {
     const roomId = uuid.v4()
 
