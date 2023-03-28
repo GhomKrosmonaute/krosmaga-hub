@@ -5,3 +5,7 @@ socket.emit("joinBanRoom", {
   maxPickCount,
   maxBanCount,
 })
+
+socket.on("updateBanRoom", (session) => {
+  console.log(session)
+})
