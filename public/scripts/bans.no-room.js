@@ -1,35 +1,24 @@
-var socket = io()
-var newRoomButton = document.getElementById("new-room-button")
-
-var toggleNewRoomButton = () => {
-  newRoomButton = document.getElementById("new-room-button")
-  newRoomButton.classList.toggle("enabled")
-
-  if (newRoomButton.classList.contains("enabled")) {
-    newRoomButton.addEventListener("click", createRoom)
-  } else {
-    newRoomButton.removeEventListener("click", createRoom)
-  }
+function getRoomIdInput() {
+  return document.getElementById("room-id-input")
 }
 
-const createRoom = () => {
-  toggleNewRoomButton()
-
-  socket.emit("createRoom")
-
-  socket.on("createRoom", ({ roomId, success }) => {
-    if (success) {
-      window.location.href = `/bans/${roomId}`
-    } else {
-      alert("oops")
-
-      setTimeout(() => {
-        newRoomButton.addEventListener("click", createRoom)
-      }, 5000)
-    }
-  })
+function getMaxPickCountInput() {
+  return document.getElementById("max-pick-count-input")
 }
 
-setTimeout(() => {
-  toggleNewRoomButton()
-}, 5000)
+function getMaxBanCountInput() {
+  return document.getElementById("max-ban-count-input")
+}
+
+function getCreateRoomButton() {
+  return document.getElementById("create-room-button")
+}
+
+getCreateRoomButton().addEventListener("click", () => {
+  const roomId =
+    getRoomIdInput().value || String(Math.floor(Math.random() * 1000000))
+  const maxPickCount = getMaxPickCountInput().value || 3
+  const maxBanCount = getMaxBanCountInput().value || 1
+
+  window.location.href = `/bans/${roomId}?maxPickCount=${maxPickCount}&maxBanCount=${maxBanCount}`
+})

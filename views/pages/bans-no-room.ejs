@@ -1,13 +1,32 @@
 <%- include('../includes/head', { title: 'Krosmaga Hub | Bans' }) %>
-<%- include('../includes/socket-io') %>
 
 <script defer src="/public/scripts/bans.no-room.js"></script>
 <link rel="stylesheet" href="/public/styles/bans.no-room.css">
 
-<p>
-    Vous n'avez pas rejoint de session de bans. <br>
-    Si votre adversaire possède un lien, demandez-lui de vous le partager. <br>
-    Sinon, créez une nouvelle session !
-</p>
+<body class="flex-center-column">
+    <h1>
+        Création d'une session de bans
+    </h1>
 
-<button id="new-room-button">Nouveau</button>
+    <p class="text-center">
+        Si votre adversaire possède un lien, demandez-lui de vous le partager. <br>
+        Sinon, créez une nouvelle session !
+    </p>
+
+    <label class="flex">
+        Choisissez un nom pour votre session :
+        <input type="text" id="room-id-input" placeholder="Session ID" class="text-center">
+    </label>
+
+    <label class="flex">
+        Choisissez le nombre max de picks :
+        <input type="number" id="max-picks-input" placeholder="Nombre de picks" class="text-center" value="3">
+    </label>
+
+    <label class="flex">
+        Choisissez le nombre max de bans :
+        <input type="number" id="max-bans-input" placeholder="Nombre de bans" class="text-center" value="1">
+    </label>
+
+    <button id="create-room-button">Nouveau</button>
+</body>
