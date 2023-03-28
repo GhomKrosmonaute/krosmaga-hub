@@ -1,91 +1,83 @@
-import { app, io } from "../app.js"
+import express from "express"
 import * as uuid from "uuid"
+import gods from "../data/gods.json"
 
-app.get("/bans", (req, res) => {
+export const router = express.Router()
+
+router.get("/", (req, res) => {
   res.render("pages/bans-no-room")
 })
 
-/**
- * @type {Object & {
- *   [roomId: string]: import("socket.io").Socket[]
- * }}
- */
-const banRooms = {}
-
-io.on("connection", (socket) => {
-  console.log("new user connected", socket.id)
-
-  socket.on("createRoom", () => {
-    const roomId = uuid.v4()
-
-    banRooms[roomId] = [socket]
-
-    socket.emit("createRoom", { roomId, success: true })
-  })
-
-  socket.on("joinBanRoom", (roomId) => {
-    const room = banRooms[roomId]
-
-    if (!room) {
-      return socket.emit("joinBanRoom", {
-        success: false,
-        message: "Aucune session de bans ne possède cet identifiant.",
-      })
-    }
-
-    if (banRooms[roomId].length > 1) {
-      return socket.emit("joinBanRoom", {
-        success: false,
-        message: "Cette session de bans est déjà occupée par deux joueurs.",
-      })
-    }
-
-    banRooms[roomId].push(socket)
-
-    socket.session = roomId
-
-    socket.join(roomId)
-
-    socket.emit("opponentHasArrived", banRooms[roomId].length)
-    socket.broadcast
-      .to(roomId)
-      .emit("opponentHasArrived", banRooms[roomId].length)
-
-    socket.on("disconnect", () => {
-      banRooms[socket.session] = banRooms[socket.session].filter(
-        (s) => s !== socket
-      )
-
-      socket.broadcast
-        .to(socket.session)
-        .emit("opponentIsGone", banRooms[roomId].length)
-
-      if (banRooms[socket.session].length === 0) delete banRooms[socket.session]
-    })
-
-    socket.on("moveTo", (id, pos, dLog) => {
-      socket.emit("moveTo", id, pos, dLog)
-      socket.broadcast.to(socket.session).emit("moveTo", id, pos, dLog)
-    })
-
-    socket.on("reset", () => {
-      socket.emit("reset")
-      socket.broadcast.to(socket.session).emit("reset")
-    })
-
-    socket.on("ajuste", (id) => {
-      socket.emit("ajuste", id)
-      socket.broadcast.to(socket.session).emit("ajuste", id)
-    })
-
-    socket.on("eat", (eaterId, id) => {
-      socket.emit("eat", eaterId, id)
-      socket.broadcast.to(socket.session).emit("eat", eaterId, id)
-    })
-
-    socket.on("message", (text, color) => {
-      socket.emit("message", text, color)
-      socket.broadcast.to(socket.session).emit("message", text, color)
-    })
-  })
+router.get("/:roomId", (req, res) => {
+  res.render("pages/bans-room", { roomId: req.params.roomId })
 })
+
+export const onConnection = (socket) => {
+  let ctx = createContext()
+
+  socket.on("joinBanRoom", ({ roomId, godPickCount, godBanCount }) => {
+    ctx.roomId = roomId || uuid.v4()
+    socket.join(ctx.roomId)
+    ctx.godPickCount = Number(godPickCount) || 3
+    ctx.godBanCount = Number(godBanCount) || 1
+    ctx.room = socket.to(roomId)
+    ctx.room.emit("updateBanRoom", ctx)
+  })
+
+  socket.on("pickGod", (god) => {
+    if (!ctx.roomId)
+      return socket.emit("pickGod", {
+        error: "Erreur, veuillez recharger la page.",
+      })
+
+    if (ctx.gods.includes(god))
+      return socket.emit("pickGod", { error: "Vous avez déjà choisi ce dieu." })
+
+    if (!gods.includes(god))
+      return socket.emit("pickGod", { error: "Ce dieu n'existe pas." })
+
+    if (ctx.gods.length >= ctx.godPickCount)
+      return socket.emit("pickGod", {
+        error: "Vous avez déjà choisi le nombre maximum de dieux.",
+      })
+
+    ctx.gods.push(god)
+    ctx.room.emit("updateBanRoom", ctx)
+  })
+
+  socket.on("banGod", (god) => {
+    if (!ctx.roomId)
+      return socket.emit("banGod", {
+        error: "Erreur, veuillez recharger la page.",
+      })
+
+    if (ctx.bannedGods.includes(god))
+      return socket.emit("banGod", { error: "Vous avez déjà banni ce dieu." })
+
+    if (!gods.includes(god))
+      return socket.emit("banGod", { error: "Ce dieu n'existe pas." })
+
+    if (ctx.bannedGods.length >= ctx.godBanCount)
+      return socket.emit("banGod", {
+        error: "Vous avez déjà banni le nombre maximum de dieux.",
+      })
+
+    ctx.bannedGods.push(god)
+    ctx.room.emit("updateBanRoom", ctx)
+  })
+
+  socket.on("disconnect", () => {
+    ctx = createContext()
+  })
+}
+
+function createContext() {
+  return {
+    godBanCount: 1,
+    godPickCount: 3,
+    roomId: null,
+    room: null,
+    gods: [],
+    bannedGods: [],
+  }
+}
