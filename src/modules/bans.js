@@ -1,7 +1,7 @@
 import express from "express"
 import * as uuid from "uuid"
 
-import Session from "./bans.session"
+import Session from "./bans.session.js"
 
 export const router = express.Router()
 
