@@ -2,6 +2,8 @@
 
 # Krosmaga Hub
 
-- / # home
-- /bans # create a ban room
-- /bans/:roomId # join a ban room
+## Pages
+
+- zaap: `/`
+- bans form: `/bans/`
+- bans room: `/bans/{ROOM_ID}?username={USERNAME}&maxBanCount={MAX_BAN_COUNT}&maxPickCount={MAX_PICK_COUNT}`
