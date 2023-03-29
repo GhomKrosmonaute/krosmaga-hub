@@ -1,24 +1,9 @@
-function getRoomIdInput() {
-  return document.getElementById("room-id-input")
-}
-
-function getMaxPickCountInput() {
-  return document.getElementById("max-pick-count-input")
-}
-
-function getMaxBanCountInput() {
-  return document.getElementById("max-ban-count-input")
-}
-
-function getCreateRoomButton() {
-  return document.getElementById("create-room-button")
-}
-
-getCreateRoomButton().addEventListener("click", () => {
+document.getElementById("create-room-button").addEventListener("click", () => {
   const roomId =
-    getRoomIdInput().value || String(Math.floor(Math.random() * 1000000))
-  const maxPickCount = getMaxPickCountInput().value || 3
-  const maxBanCount = getMaxBanCountInput().value || 1
+    document.getElementById("room-id-input").value || String(Math.floor(Math.random() * 1000000))
+  const maxPickCount = document.getElementById("max-pick-count-input").value || 3
+  const maxBanCount = document.getElementById("max-ban-count-input").value || 1
+  const username = document.getElementById("username-input").value || "Spectateur"
 
-  window.location.href = `/bans/${roomId}?maxPickCount=${maxPickCount}&maxBanCount=${maxBanCount}`
+  window.location.href = `/bans/${roomId}?username=${username}&maxPickCount=${maxPickCount}&maxBanCount=${maxBanCount}`
 })
