@@ -14,13 +14,9 @@ router.get("/:roomId", (req, res) => {
     roomId: req.params.roomId,
     maxBanCount: Number(req.query.maxBanCount ?? 1),
     maxPickCount: Number(req.query.maxPickCount ?? 3),
+    username: req.query.username ?? uuid.v4(),
   })
 })
-
-/**
- * @type {Session[]}
- */
-const sessions = []
 
 export const onConnection = (socket) => {
   let user = null
@@ -37,25 +33,62 @@ export const onConnection = (socket) => {
       Session.all.find((session) => session.roomId === roomId) ??
       new Session(roomId, data.maxPickCount, data.maxBanCount)
 
-    // create user in session
-    user = session.addUser(socket)
+    try {
+      // create user in session
+      user = session.addUser(socket, data.username)
 
-    // update info on other clients in room
-    session.update()
+      // update info on other clients in room
+      session.update()
+    } catch (error) {
+      socket.emit("error", error.message)
+    }
   })
 
   socket.on("pickGod", ({ god }) => {
-    user?.pick(god)
-    session?.update()
+    try {
+      user?.pick(god)
+      session?.update()
+    } catch (error) {
+      socket.emit("error", error.message)
+    }
   })
 
   socket.on("banGod", ({ god }) => {
-    user?.ban(god)
-    session?.update()
+    try {
+      user?.ban(god)
+      session?.update()
+    } catch (error) {
+      socket.emit("error", error.message)
+    }
+  })
+
+  socket.on("unbanGod", ({ god }) => {
+    try {
+      user?.unban(god)
+      session?.update()
+    } catch (error) {
+      socket.emit("error", error.message)
+    }
+  })
+
+  socket.on("unpickGod", ({ god }) => {
+    try {
+      user?.unpick(god)
+      session?.update()
+    } catch (error) {
+      socket.emit("error", error.message)
+    }
+  })
+
+  socket.on("requestNextPhase", () => {
+    try {
+      user?.nextPhase()
+    } catch (error) {
+      socket.emit("error", error.message)
+    }
   })
 
   socket.on("disconnect", () => {
-    // todo: remove user from session
-    //  if session is empty, remove session
+    session?.removeUser(socket)
   })
 }
