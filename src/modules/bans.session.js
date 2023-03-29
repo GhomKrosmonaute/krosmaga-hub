@@ -74,11 +74,7 @@ export default class Session {
   }
 
   update() {
-    io.to(this.roomId).emit("updateBanRoom", {
-      users: this.users.map((user) => user.toJSON()),
-      viewers: this.viewers.map((user) => user.toJSON()),
-      phase: sessionPhases[this.phase],
-    })
+    io.to(this.roomId).emit("updateBanRoom", this.toJSON())
   }
 
   destroy() {
@@ -86,5 +82,13 @@ export default class Session {
 
     io.to(this.roomId).emit("destroyBanRoom")
     io.to(this.roomId).disconnectSockets(true)
+  }
+
+  toJSON() {
+    return {
+      users: this.users.map((user) => user.toJSON()),
+      viewers: this.viewers.map((user) => user.toJSON()),
+      phase: sessionPhases[this.phase],
+    }
   }
 }
