@@ -1,17 +1,61 @@
 <%- include('../includes/head', { title: 'Krosmaga Hub | Bans' }) %>
 <%- include('../includes/socket-io') %>
 
-<script>
-  var roomId = "<%= roomId %>"
-  var maxBanCount = "<%= maxBanCount %>"
-  var maxPickCount = "<%= maxPickCount %>"
-  var username = "<%= username %>"
+<script defer>
+  var socket = io()
+
+  socket.emit("joinBanRoom", {
+    roomId: "<%= roomId %>",
+    maxPickCount: "<%= maxPickCount %>",
+    maxBanCount: "<%= maxBanCount %>",
+    username: "<%= username %>",
+  })
+
+  socket.on("updateBanRoom", (session) => {
+    console.log(session)
+  })
 </script>
 
-<script defer src="/public/scripts/bans.room.js"></script>
+<body class="flex-center-column">
+  <p class="info">
+    Attention ! <br>
+    Ne montrez ce lien qu'à votre adversaire ! <br>
+    Si vous et votre adversaire quittez cette page, cette session de bans sera supprimée.
+  </p>
 
-<p>
-  Attention ! <br>
-  Ne montrez ce lien qu'à votre adversaire ! <br>
-  Si vous et votre adversaire quittez cette page, cette session de bans sera supprimée.
-</p>
+  <div>
+    <p class="info">
+      Vous avez <span id="ban-count">0</span> bans restants
+      et <span id="pick-count">0</span> picks restants.
+    </p>
+    <p class="info">
+      Votre adversaire a <span id="opponent-ban-count">0</span> bans restants
+      et <span id="opponent-pick-count">0</span> picks restants.
+    </p>
+  </div>
+
+  <div class="flex">
+    <% for(const god of gods){ %>
+      <label>
+        <input id="<%= god %>" type="checkbox" name="god" value="<%= god %>">
+        <img src="/public/images/gods/<%= god %>.png" alt="<%= god %>">
+      </label>
+    <% } %>
+  </div>
+
+  <script>
+    <% for(const god of gods) { %>
+      document.getElementById("<%= god %>").onclick = (event) => {
+        if(event.target.checked) {
+          socket.emit("banGod", {
+            god: event.target.value,
+          })
+        } else {
+          socket.emit("unbanGod", {
+            god: event.target.value,
+          })
+        }
+      }
+    <% } %>
+  </script>
+</body>

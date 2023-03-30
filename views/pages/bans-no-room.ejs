@@ -1,14 +1,23 @@
 <%- include('../includes/head', { title: 'Krosmaga Hub | Bans' }) %>
 
-<script defer src="/public/scripts/bans.no-room.js"></script>
-<link rel="stylesheet" href="/public/styles/bans.no-room.css">
+<script defer>
+  document.getElementById("create-room-button").addEventListener("click", () => {
+    const roomId =
+      document.getElementById("room-id-input").value || String(Math.floor(Math.random() * 1000000))
+    const maxPickCount = document.getElementById("max-pick-count-input").value || 3
+    const maxBanCount = document.getElementById("max-ban-count-input").value || 1
+    const username = document.getElementById("username-input").value || "Spectateur"
+
+    window.location.href = `/bans/${roomId}?username=${username}&maxPickCount=${maxPickCount}&maxBanCount=${maxBanCount}`
+  })
+</script>
 
 <body class="flex-center-column">
     <h1>
         Création d'une session de bans
     </h1>
 
-    <p class="text-center">
+    <p class="text-center info">
         Si votre adversaire possède un lien, demandez-lui de vous le partager. <br>
         Sinon, créez une nouvelle session !
     </p>
@@ -25,12 +34,12 @@
 
     <label class="flex">
         Choisissez le nombre max de picks :
-        <input type="number" id="max-picks-input" placeholder="Nombre de picks" class="text-center" value="3">
+        <input type="number" id="max-pick-count-input" placeholder="Nombre de picks" class="text-center" value="3">
     </label>
 
     <label class="flex">
         Choisissez le nombre max de bans :
-        <input type="number" id="max-bans-input" placeholder="Nombre de bans" class="text-center" value="1">
+        <input type="number" id="max-ban-count-input" placeholder="Nombre de bans" class="text-center" value="1">
     </label>
 
     <button id="create-room-button">Nouveau</button>

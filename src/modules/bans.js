@@ -3,6 +3,8 @@ import * as uuid from "uuid"
 
 import Session from "./bans.session.js"
 
+import gods from "../data/gods.json" assert { type: "json" }
+
 export const router = express.Router()
 
 router.get("/", (req, res) => {
@@ -11,6 +13,7 @@ router.get("/", (req, res) => {
 
 router.get("/:roomId", (req, res) => {
   res.render("pages/bans-room", {
+    gods,
     roomId: req.params.roomId,
     maxBanCount: Number(req.query.maxBanCount ?? 1),
     maxPickCount: Number(req.query.maxPickCount ?? 3),
@@ -83,6 +86,7 @@ export const onConnection = (socket) => {
   socket.on("requestNextPhase", () => {
     try {
       user?.nextPhase()
+      session?.update()
     } catch (error) {
       socket.emit("error", error.message)
     }

@@ -38,11 +38,15 @@ export default class Session {
     if (user) {
       this.users.splice(this.users.indexOf(user), 1)
 
+      this.update()
+
       if (this.users.length === 0) {
         this.destroy()
       }
     } else if (viewer) {
       this.viewers.splice(this.viewers.indexOf(viewer), 1)
+
+      this.update()
     }
   }
 
